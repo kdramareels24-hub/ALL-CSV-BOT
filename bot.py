@@ -8,8 +8,8 @@ import sys
 from flask import Flask
 from threading import Thread
 
-BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'
-OWNER_ID = 123456789  # Apna ID daal
+BOT_TOKEN = os.environ.get('BOT_TOKEN') 
+OWNER_ID = int(os.environ.get('OWNER_ID', 123456789))
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
