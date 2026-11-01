@@ -7,9 +7,14 @@ import os
 import sys
 from flask import Flask
 from threading import Thread
+from dotenv import load_dotenv
 
-BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'
-OWNER_ID = 123456789  # Yahan apna Telegram User ID daalein
+# Load variables from .env file
+load_dotenv()
+
+# Get variables securely
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
+OWNER_ID = int(os.environ.get('OWNER_ID', 0))
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
