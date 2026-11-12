@@ -7,6 +7,7 @@ import os
 import sys
 from flask import Flask
 from threading import Thread
+import time
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN') 
 OWNER_ID = int(os.environ.get('OWNER_ID', 123456789))
@@ -120,7 +121,7 @@ def process_csv_file(message):
         numbers = extract_numbers(downloaded_file, message.document.file_name)
         if not numbers: return bot.reply_to(message, "❌ No numbers found.")
             
-        user_data[message.chat.id] = {'numbers': numbers, 'command': 'Make_CSV'}
+        user_data[message.chat.id] = {'numbers': numbers, 'command': 'make_csv'}
         markup = InlineKeyboardMarkup()
         markup.add(
             InlineKeyboardButton("Wati", callback_data="soft_Wati"),
@@ -262,13 +263,15 @@ def generate_txt_file(message):
 app = Flask(__name__)
 @app.route('/')
 def keep_alive(): return "Bot is running!"
+
 def run(): app.run(host='0.0.0.0', port=8080)
+
 if __name__ == "__main__":
     Thread(target=run).start()
     
-    import time
-    print("Waiting for old Railway containers to shut down...")
-    time.sleep(5)  # Purane instance ko kill hone ka time dega
+    # 409 Conflict Error Fix for Railway
+    print("Waiting for old Railway instances to close...")
+    time.sleep(5)
     
     try:
         bot.remove_webhook()
