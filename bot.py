@@ -72,12 +72,12 @@ def start_command(message):
     if not check_access(message): return
     text = (
         "🤖 **Welcome to CSV/TXT Processing Bot**\n\n"
-        "📁 `/Make_CSV` - File bhejo, Software chuno, CC filter karo aur perfect format lo.\n"
-        "✂️ `/Split_file` - Sequence files split karne ke liye.\n"
-        "📝 `/Make_Txt` - Clean TXT extraction.\n"
+        "📁 `/make_csv` - File bhejo, Software chuno, CC filter karo aur perfect format lo.\n"
+        "✂️ `/split_file` - Sequence files split karne ke liye.\n"
+        "📝 `/make_txt` - Clean TXT extraction.\n"
         "👤 `/add_user <id>` - Access dene ke liye.\n"
-        "🛑 `/Reset` - Stop Process.\n"
-        "🔄 `/Restart` - Redeploy."
+        "🛑 `/reset` - Stop Process.\n"
+        "🔄 `/restart` - Redeploy."
     )
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
@@ -91,26 +91,26 @@ def add_user_command(message):
     except:
         bot.reply_to(message, "⚠️ Format: /add_user 12345678")
 
-@bot.message_handler(commands=['Reset'])
+@bot.message_handler(commands=['reset'])
 def reset_command(message):
     if message.chat.id in user_data:
         del user_data[message.chat.id]
     bot.reply_to(message, "🛑 Operations stopped. Memory Cleared.")
 
-@bot.message_handler(commands=['Restart'])
+@bot.message_handler(commands=['restart'])
 def restart_command(message):
     if message.chat.id != OWNER_ID: return
     bot.reply_to(message, "🔄 Restarting...")
     os.execl(sys.executable, sys.executable, *sys.argv)
 
-@bot.message_handler(commands=['Make_CSV'])
+@bot.message_handler(commands=['make_csv'])
 def make_csv_start(message):
     if not check_access(message): return
     msg = bot.reply_to(message, "📥 Send file (TXT, Excel, CSV):")
     bot.register_next_step_handler(msg, process_csv_file)
 
 def process_csv_file(message):
-    if message.text == '/Reset': return reset_command(message)
+    if message.text == '/reset': return reset_command(message)
     if not message.document: return
     try:
         bot.reply_to(message, "⏳ Extracting exact numbers without errors...")
@@ -140,7 +140,7 @@ def software_selection(call):
     bot.register_next_step_handler(msg, process_country_code)
 
 def process_country_code(message):
-    if message.text == '/Reset': return reset_command(message)
+    if message.text == '/reset': return reset_command(message)
     cc = message.text.strip().replace('+', '')
     
     numbers = user_data[message.chat.id]['numbers']
@@ -155,7 +155,7 @@ def process_country_code(message):
     bot.register_next_step_handler(msg, generate_csv_file)
 
 def generate_csv_file(message):
-    if message.text == '/Reset': return reset_command(message)
+    if message.text == '/reset': return reset_command(message)
     filename = message.text.strip()
     data = user_data.get(message.chat.id)
     if not data: return 
@@ -184,14 +184,14 @@ def generate_csv_file(message):
     bot.send_document(message.chat.id, bio)
     del user_data[message.chat.id]
 
-@bot.message_handler(commands=['Split_file'])
+@bot.message_handler(commands=['split_file'])
 def split_file_start(message):
     if not check_access(message): return
     msg = bot.reply_to(message, "📥 Please send file to split.")
     bot.register_next_step_handler(msg, process_split_file)
 
 def process_split_file(message):
-    if message.text == '/Reset': return reset_command(message)
+    if message.text == '/reset': return reset_command(message)
     if not message.document: return 
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
@@ -204,7 +204,7 @@ def process_split_file(message):
     bot.register_next_step_handler(msg, get_split_chunk_size)
 
 def get_split_chunk_size(message):
-    if message.text == '/Reset': return reset_command(message)
+    if message.text == '/reset': return reset_command(message)
     try:
         user_data[message.chat.id]['chunk_size'] = int(message.text.strip())
         msg = bot.reply_to(message, "✅ Base Name bhejo (e.g., flame):")
@@ -214,7 +214,7 @@ def get_split_chunk_size(message):
         bot.register_next_step_handler(msg, get_split_chunk_size)
 
 def generate_split_files(message):
-    if message.text == '/Reset': return reset_command(message)
+    if message.text == '/reset': return reset_command(message)
     base_name = message.text.strip()
     data = user_data.get(message.chat.id)
     if not data: return
@@ -229,14 +229,14 @@ def generate_split_files(message):
         bot.send_document(message.chat.id, bio)
     del user_data[message.chat.id]
 
-@bot.message_handler(commands=['Make_Txt'])
+@bot.message_handler(commands=['make_txt'])
 def make_txt_start(message):
     if not check_access(message): return
     msg = bot.reply_to(message, "📥 Please send file for Make_Txt.")
     bot.register_next_step_handler(msg, process_txt_file)
 
 def process_txt_file(message):
-    if message.text == '/Reset': return reset_command(message)
+    if message.text == '/reset': return reset_command(message)
     if not message.document: return 
     file_info = bot.get_file(message.document.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
@@ -249,7 +249,7 @@ def process_txt_file(message):
     bot.register_next_step_handler(msg, generate_txt_file)
 
 def generate_txt_file(message):
-    if message.text == '/Reset': return reset_command(message)
+    if message.text == '/reset': return reset_command(message)
     filename = message.text.strip()
     data = user_data.get(message.chat.id)
     if not data: return
