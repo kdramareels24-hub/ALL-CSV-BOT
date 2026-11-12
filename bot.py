@@ -266,12 +266,14 @@ def run(): app.run(host='0.0.0.0', port=8080)
 if __name__ == "__main__":
     Thread(target=run).start()
     
-    # Ye line purane atke hue webhooks ya connections ko clear kar degi
+    import time
+    print("Waiting for old Railway containers to shut down...")
+    time.sleep(5)  # Purane instance ko kill hone ka time dega
+    
     try:
         bot.remove_webhook()
     except Exception as e:
         print(f"Webhook error ignored: {e}")
         
     print("Bot is starting polling...")
-    # skip_pending=True purane atke hue messages ko ignore kar dega taaki bot crash na ho
     bot.infinity_polling(skip_pending=True)
